@@ -30,6 +30,8 @@ struct Literal {
   std::string key;
 };
 
+using Literals = std::vector<Literal>;
+
 struct Paren {
   ParenType type;
   uint8_t index;
@@ -38,10 +40,10 @@ struct Paren {
 template <typename T> using IndexVector = std::vector<T>;
 using ParenIndexes = IndexVector<Paren>;
 
-typedef struct Node {
+struct Node {
   Keyword ins;
-  std::vector<Literal> values;
-} InsNode;
+  Literals args;
+};
 
 using Nodes = std::vector<Node>;
 
