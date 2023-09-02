@@ -1,13 +1,15 @@
 #include "../headers/parser.hh"
 #include "assemble.cpp"
 #include "utils.cpp"
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <string>
 
 int main(int argc, char *argv[]) {
-  if (argc != 2) {
-    std::cout << "Usage: " << argv[0] << " <input_file>" << std::endl;
+  if (argc < 3) {
+    std::cout << "Usage: " << argv[0] << " <input_file> <outout_path>"
+              << std::endl;
     return 1;
   }
 
@@ -38,6 +40,31 @@ int main(int argc, char *argv[]) {
 
     std::string assembly = assemble_nodes(nodes);
     std::cout << "\nGenerated Assembly:\n" << assembly;
+
+    ofstream outfile;
+    outfile.open("./build/temp.s");
+
+    if (outfile.is_open()) {
+      outfile << assembly;
+      outfile.close();
+    }
+
+    const char *out_bin = argv[2];
+    const char *build_cmd = "nasm -f elf64 ./build/temp.s -o ./build/temp.o";
+
+    int result = std::system(build_cmd);
+    if (result == 0) {
+      cout << "Obejct File Created";
+    } else {
+      cout << "Object File Creation Failed!";
+    }
+
+    std::string comp_cmd = ("ld ./build/temp.o -o " + std::string(out_bin));
+    int compres = std::system(comp_cmd.c_str());
+    if (compres == 0) {
+      cout << "Successfully Compiled Binary";
+    }
+
   } else {
     std::cerr << "Unable to open the file: " << file_name << std::endl;
     return 1;

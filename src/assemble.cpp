@@ -1,6 +1,7 @@
 #include "../headers/assemble.hh"
 #include "../headers/parser.hh"
 #include "../headers/utils.hh"
+#include "../std/std.cpp"
 #include <cstdio>
 #include <cstring>
 #include <string>
@@ -23,8 +24,9 @@ std::string assemble_nodes(Nodes &nodes) {
       sprintf(dline, "%s: db \"%s\"\n", varname.c_str(), strval.c_str());
       data += dline; // Append the formatted line to the 'data' string
 
-      sprintf(tline, "mov rdi, %s\nmov rdx, %ld\ncall print", varname.c_str(),
-              strlen(strval.c_str()));
+      sprintf(tline,
+              "mov rdi, 1\nmov rsi, %s\nmov rdx, %ld\nmov rax, 1\nsyscall",
+              varname.c_str(), strlen(strval.c_str()));
       text += tline; // Append the formatted line to the 'data' string
 
       break; // Don't forget to break
@@ -37,5 +39,7 @@ std::string assemble_nodes(Nodes &nodes) {
     }
   }
 
-  return "section .data\n" + data + "\n\nsection .text\n" + text + "\n";
+  return "section .data\n" + data +
+         "\n\nsection .text\nglobal _start\n_start:\n" + text +
+         "\nmov rdi, 0\nmov rax, 60\nsyscall";
 }
