@@ -37,5 +37,5 @@ std::string assemble_nodes(Nodes &nodes) {
     }
   }
 
-  return "section .data\n" + data + "\n\nsection .text\n" + text;
+  return "section .data\n" + data + "\n\nsection .text\n" + text + "\n";
 }
