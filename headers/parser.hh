@@ -8,9 +8,26 @@
 
 using PolyVal = std::variant<int, bool, std::string>;
 
+enum Type {
+  String,
+  Int,
+  Bool,
+};
+
+enum Keyword {
+  PRINT,
+  DEFINE,
+};
+
 enum ParenType {
   LEFT_PAREN,
   RIGHT_PAREN,
+};
+
+struct Literal {
+  Type type;
+  PolyVal value;
+  std::string key;
 };
 
 struct Paren {
@@ -21,19 +38,9 @@ struct Paren {
 template <typename T> using IndexVector = std::vector<T>;
 using ParenIndexes = IndexVector<Paren>;
 
-enum Instruction {
-  PRINT,
-  DEFINE,
-};
-
-typedef struct Constant {
-  std::string Key;
-  PolyVal Value;
-} Constant;
-
 typedef struct Node {
-  Instruction Ins;
-  std::vector<Constant> Values;
+  Keyword ins;
+  std::vector<Literal> values;
 } InsNode;
 
 using Nodes = std::vector<Node>;
